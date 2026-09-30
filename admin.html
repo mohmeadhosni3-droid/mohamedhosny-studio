@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة تحكم ميم</title>
+<style>
+:root{--bg:#090a0a;--panel:#121414;--panel2:#181a1a;--text:#f4f0e8;--muted:#99978f;--gold:#c9a96a;--line:#ffffff14;--danger:#d96b6b;--ok:#77c58a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#c9a96a0d,transparent 28%),var(--bg);color:var(--text);font-family:Arial,"Tahoma",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}
+.wrap{width:min(1400px,calc(100% - 32px));margin:auto}.top{padding:22px 0;border-bottom:1px solid var(--line);position:sticky;top:0;background:#090a0af2;backdrop-filter:blur(15px);z-index:10}.topin{display:flex;justify-content:space-between;align-items:center;gap:15px}.logo{font-size:22px;font-weight:800}.logo b{color:var(--gold)}.status{font-size:12px;color:var(--muted)}main{padding:28px 0 60px}.grid{display:grid;grid-template-columns:430px 1fr;gap:24px}.card{background:linear-gradient(145deg,#151717,#101111);border:1px solid var(--line);border-radius:18px;padding:22px}.card h2{margin:0 0 16px;font-size:18px}.field{margin:0 0 14px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input,.field textarea,.field select{width:100%;background:#0c0d0d;border:1px solid #ffffff18;border-radius:10px;padding:11px;color:var(--text);outline:none}.field textarea{min-height:88px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:700}.primary{background:var(--gold);color:#111}.ghost{background:#ffffff08;color:#ddd;border:1px solid var(--line)}.danger{background:#d96b6b18;color:#ffb0b0;border:1px solid #d96b6b30}.actions{display:flex;gap:9px;flex-wrap:wrap}.preview{width:100%;height:calc(100vh - 150px);min-height:650px;border:1px solid var(--line);border-radius:18px;background:#fff}.media-list{display:grid;gap:10px}.media-item{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;background:#0c0d0d;border:1px solid var(--line);padding:9px;border-radius:12px}.thumb{width:70px;height:55px;border-radius:8px;object-fit:cover;background:#222}.media-item small{display:block;color:var(--muted);margin-top:3px}.empty{color:#777;text-align:center;padding:20px;border:1px dashed #ffffff18;border-radius:12px}.help{font-size:12px;color:#888;line-height:1.8}.offer{border:1px solid #c9a96a30;background:#c9a96a08;padding:15px;border-radius:13px;margin-top:12px}.check{display:flex;align-items:center;gap:8px;color:#ddd;font-size:13px;margin:8px 0 14px}.check input{accent-color:var(--gold)}.toast{position:fixed;bottom:20px;left:20px;background:#161818;border:1px solid var(--line);padding:12px 16px;border-radius:10px;display:none;z-index:50}.toast.ok{border-color:#77c58a55}.toast.err{border-color:#d96b6b55}
+@media(max-width:1050px){.grid{grid-template-columns:1fr}.preview{height:700px}}@media(max-width:600px){.wrap{width:min(100% - 20px,1400px)}.row{grid-template-columns:1fr}.topin{align-items:flex-start;flex-direction:column}.preview{height:650px}}
+</style></head>
+<body>
+<header class="top"><div class="wrap topin"><div><div class="logo"><b>م</b> لوحة تحكم ميم</div><div class="status" id="status">غير متصل بالمستودع</div></div><div class="actions"><button class="btn ghost" id="previewBtn">تحديث المعاينة</button><button class="btn primary" id="syncBtn">مزامنة الموقع</button></div></div></header>
+<main class="wrap"><div class="grid">
+<section>
+<div class="card">
+<h2>1. الاتصال بالموقع</h2>
+<div class="field"><label>GitHub Personal Access Token</label><input id="token" type="password" placeholder="الصق التوكن هنا، لن يتم حفظه في الكود"></div>
+<div class="help">أنشئ Fine-grained token بصلاحية Contents: Read and write لهذا المستودع فقط. التوكن يبقى في جلسة المتصفح فقط.</div>
+<div class="actions" style="margin-top:12px"><button class="btn primary" id="loadBtn">تحميل بيانات الموقع</button><button class="btn ghost" id="clearBtn">مسح التوكن</button></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h2>2. بيانات الموقع</h2>
+<div class="field"><label>اسم الموقع</label><input id="siteName"></div>
+<div class="row"><div class="field"><label>العلامة المختصرة</label><input id="brandMark"></div><div class="field"><label>الشارة فوق العنوان</label><input id="badge"></div></div>
+<div class="field"><label>العنوان الرئيسي</label><input id="heroTitle"></div>
+<div class="field"><label>النص التعريفي</label><textarea id="heroText"></textarea></div>
+<div class="field"><label>رابط واتساب</label><input id="whatsapp"></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h2>3. الخدمات</h2><div id="services"></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h2>4. العرض الحالي</h2>
+<label class="check"><input id="offerActive" type="checkbox"> إظهار العرض على الموقع</label>
+<div class="field"><label>العنوان</label><input id="offerTitle"></div>
+<div class="field"><label>الوصف</label><textarea id="offerText"></textarea></div>
+<div class="row"><div class="field"><label>السعر / العبارة</label><input id="offerPrice"></div><div class="field"><label>نص الزر</label><input id="offerButton"></div></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h2>5. معرض الأعمال</h2>
+<div class="row"><div class="field"><label>اسم المشروع</label><input id="workTitle"></div><div class="field"><label>التصنيف</label><input id="workTag" placeholder="كلادينج / حروف / جرافيك / AI"></div></div>
+<div class="field"><label>صورة المشروع</label><input id="workFile" type="file" accept="image/*"></div>
+<div class="actions"><button class="btn primary" id="addWork">إضافة للمعرض</button></div>
+<div class="media-list" id="workList" style="margin-top:14px"></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h2>6. فيديوهات الموقع</h2>
+<div class="row"><div class="field"><label>عنوان الفيديو</label><input id="videoTitle"></div><div class="field"><label>التصنيف</label><input id="videoTag" placeholder="AI / Motion / إعلان"></div></div>
+<div class="field"><label>ملف الفيديو</label><input id="videoFile" type="file" accept="video/*"></div>
+<div class="help">لأداء أفضل، ارفع فيديوهات مضغوطة. الملفات الكبيرة جدًا ليست مناسبة لتخزينها داخل GitHub.</div>
+<div class="actions"><button class="btn primary" id="addVideo">إضافة فيديو</button></div>
+<div class="media-list" id="videoList" style="margin-top:14px"></div>
+</div>
+</section>
+
+<section><iframe class="preview" id="preview" src="index.html"></iframe></section>
+</div></main><div class="toast" id="toast"></div>
+<script>
+const OWNER="mohmeadhosni3-droid",REPO="mohamedhosny-studio",BRANCH="main",FILE="content.json";
+let data={siteName:"ميم للدعاية والإعلان",brandMark:"م",badge:"دعاية وإعلان • حلول بصرية متكاملة",heroTitle:"نصنع حضورًا يُرى ويُتذكر.",heroText:"",heroButton:"استكشف أعمالنا",whatsapp:"",services:[],offer:{active:false,title:"",text:"",price:"",button:"اطلب العرض"},portfolio:[],videos:[]},sha=null;
+const $=id=>document.getElementById(id);
+function toast(t,ok=true){$("toast").textContent=t;$("toast").className="toast "+(ok?"ok":"err");$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",3000)}
+function token(){return $("token").value.trim()||sessionStorage.getItem("mim-gh-token")||""}
+function api(path,opt={}){let t=token();if(!t)throw Error("أدخل GitHub Token أولاً");return fetch("https://api.github.com/repos/"+OWNER+"/"+REPO+"/contents/"+path,{...opt,headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+t,"X-GitHub-Api-Version":"2022-11-28",...(opt.headers||{})}}).then(async r=>{let j=await r.json();if(!r.ok)throw Error(j.message||"GitHub API error");return j})}
+function setFields(){["siteName","brandMark","badge","heroTitle","heroText","whatsapp"].forEach(k=>$(k).value=data[k]||"");$("offerActive").checked=!!data.offer?.active;$("offerTitle").value=data.offer?.title||"";$("offerText").value=data.offer?.text||"";$("offerPrice").value=data.offer?.price||"";$("offerButton").value=data.offer?.button||"اطلب العرض";renderServices();renderMedia()}
+function collect(){data.siteName=$("siteName").value;data.brandMark=$("brandMark").value;data.badge=$("badge").value;data.heroTitle=$("heroTitle").value;data.heroText=$("heroText").value;data.whatsapp=$("whatsapp").value;data.offer={active:$("offerActive").checked,title:$("offerTitle").value,text:$("offerText").value,price:$("offerPrice").value,button:$("offerButton").value};return data}
+function renderServices(){let box=$("services");box.innerHTML="";data.services.forEach((s,i)=>{let d=document.createElement("div");d.style.cssText="border-bottom:1px solid #ffffff10;padding:10px 0 3px";d.innerHTML='<div class="field"><label>الخدمة '+(i+1)+'</label><input data-s="'+i+'" data-k="title" value="'+esc(s.title)+'"></div><div class="field"><input data-s="'+i+'" data-k="text" value="'+esc(s.text)+'"></div>';box.appendChild(d)});box.querySelectorAll("input").forEach(x=>x.oninput=()=>{data.services[x.dataset.s][x.dataset.k]=x.value})}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function renderMedia(){renderList("workList",data.portfolio,"work");renderList("videoList",data.videos,"video")}
+function renderList(id,arr,type){let box=$(id);box.innerHTML="";if(!arr.length){box.innerHTML='<div class="empty">لا توجد عناصر حتى الآن</div>';return}arr.forEach((x,i)=>{let d=document.createElement("div");d.className="media-item";let src=x.url||"";d.innerHTML=(type==="work"?'<img class="thumb" src="'+src+'">':'<div class="thumb" style="display:grid;place-items:center">▶</div>')+'<div><b>'+esc(x.title)+'</b><small>'+esc(x.tag||"")+'</small></div><button class="btn danger" data-del="'+i+'">حذف</button>';d.querySelector("[data-del]").onclick=()=>{arr.splice(i,1);renderMedia()};box.appendChild(d)})}
+async function load(){try{$("status").textContent="جاري التحميل...";let r=await api(FILE);sha=r.sha;data=JSON.parse(atob(r.content.replace(/\n/g,"")));setFields();sessionStorage.setItem("mim-gh-token",token());$("status").textContent="متصل • تم تحميل آخر نسخة";toast("تم تحميل بيانات الموقع")}catch(e){$("status").textContent="خطأ في الاتصال";toast(e.message,false)}}
+function readFile(file){return new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
+async function uploadFile(file,path){let dataUrl=await readFile(file),base64=dataUrl.split(",")[1];let r=await api(path,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:"Add media: "+path,content:base64,branch:BRANCH})});return "https://raw.githubusercontent.com/"+OWNER+"/"+REPO+"/"+BRANCH+"/"+path+"?v="+Date.now()}
+$("addWork").onclick=async()=>{let f=$("workFile").files[0],t=$("workTitle").value.trim(),tag=$("workTag").value.trim();if(!f||!t)return toast("أدخل اسم المشروع واختر صورة",false);try{let path="portfolio/"+Date.now()+"-"+f.name.replace(/[^a-zA-Z0-9._-]/g,"-");let url=await uploadFile(f,path);data.portfolio.push({title:t,tag,url});$("workFile").value="";$("workTitle").value="";$("workTag").value="";renderMedia();toast("أضيفت الصورة، اضغط مزامنة لنشر البيانات")}catch(e){toast(e.message,false)}}
+$("addVideo").onclick=async()=>{let f=$("videoFile").files[0],t=$("videoTitle").value.trim(),tag=$("videoTag").value.trim();if(!f||!t)return toast("أدخل عنوان الفيديو واختر ملفًا",false);if(f.size>35000000)return toast("الفيديو أكبر من 35MB، اضغطه أولًا",false);try{let path="portfolio/videos/"+Date.now()+"-"+f.name.replace(/[^a-zA-Z0-9._-]/g,"-");let url=await uploadFile(f,path);data.videos.push({title:t,tag,url});$("videoFile").value="";$("videoTitle").value="";$("videoTag").value="";renderMedia();toast("أضيف الفيديو، اضغط مزامنة لنشر البيانات")}catch(e){toast(e.message,false)}}
+$("syncBtn").onclick=async()=>{try{collect();if(!sha){let r=await api(FILE);sha=r.sha}let content=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));let r=await api(FILE,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:"Update MIM website content",content,sha,branch:BRANCH})});sha=r.content.sha;$("status").textContent="متصل • تمت المزامنة";$("preview").src="index.html?v="+Date.now();toast("تمت المزامنة بنجاح")}catch(e){toast(e.message,false)}}
+$("loadBtn").onclick=load;$("previewBtn").onclick=()=>{$("preview").src="index.html?v="+Date.now();toast("تم تحديث المعاينة")};$("clearBtn").onclick=()=>{sessionStorage.removeItem("mim-gh-token");$("token").value="";$("status").textContent="تم مسح التوكن"};$("token").oninput=()=>sessionStorage.setItem("mim-gh-token",$("token").value);
+function init(){let t=sessionStorage.getItem("mim-gh-token");if(t){$("token").value=t;load()}else setFields()}init();
+</script></body></html>
